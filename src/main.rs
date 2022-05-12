@@ -1,15 +1,15 @@
-pub mod compiler;
+pub mod interpreter;
 
 use std::fs;
 
-use compiler::Compiler;
+use interpreter::Interpreter;
 
 fn main() {
 	let src: String = fs::read_to_string("test.bf").expect("Problem opening file");
 	let rom: Vec<char> = src.chars().collect();
 
-    let mut compiler = Compiler::new(rom);
+    let mut interpreter = Interpreter::new(rom);
 
-	compiler.run();
+	interpreter.run();
 }
 

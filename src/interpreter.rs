@@ -2,7 +2,7 @@ use char;
 
 use std::io::{self, Read};
 
-pub struct Compiler {
+pub struct Interpreter {
 	rom: Vec<char>,
 	ram: [u8; 0x7530],
 	pc: usize,
@@ -10,9 +10,9 @@ pub struct Compiler {
 	loop_count: u16,
 }
 
-impl Compiler {
-	pub fn new(src: Vec<char>) -> Compiler {
-		Compiler {
+impl Interpreter {
+	pub fn new(src: Vec<char>) -> Interpreter {
+		Interpreter {
 			rom: src,
 			ram: [0; 0x7530],
 			pc: 0x0,
