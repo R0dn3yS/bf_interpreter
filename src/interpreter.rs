@@ -1,6 +1,6 @@
 use char;
 
-use std::io::{self, Read};
+use std::io::{self, Read, Write};
 
 pub struct Interpreter {
 	rom: Vec<char>,
@@ -47,8 +47,7 @@ impl Interpreter {
 			}
 
 			'.' => {
-				let byte = self.ram[self.pointer];
-				print!("{}", byte as char)
+				std::io::stdout().write(&self.ram[self.pointer..self.pointer + 1]).expect("Oopsie");
 			}
 
 			',' => {
