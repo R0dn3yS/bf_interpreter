@@ -3,7 +3,7 @@ use char;
 use std::io::{self, Read, Write};
 
 pub struct Interpreter {
-	rom: Vec<char>,
+	rom: Vec<u8>,
 	ram: [u8; 0x7530],
 	pc: usize,
 	pointer: usize,
@@ -11,7 +11,7 @@ pub struct Interpreter {
 }
 
 impl Interpreter {
-	pub fn new(src: Vec<char>) -> Interpreter {
+	pub fn new(src: Vec<u8>) -> Interpreter {
 		Interpreter {
 			rom: src,
 			ram: [0; 0x7530],
@@ -21,15 +21,15 @@ impl Interpreter {
 		}
 	}
 
-	pub fn run(&mut self) { 
+	pub fn run(&mut self) {
 		while self.pc <= (self.rom.len() - 1) {
 			self.execute(self.rom[self.pc]);
 			self.pc += 1;
 		}
 	}
 
-	fn execute(&mut self, op: char) {
-		match op {
+	fn execute(&mut self, op: u8) {
+		match op as char {
 			'>' => {
 				self.pointer += 1;
 			}
@@ -47,11 +47,15 @@ impl Interpreter {
 			}
 
 			'.' => {
-				std::io::stdout().write(&self.ram[self.pointer..self.pointer + 1]).expect("Oopsie");
+				std::io::stdout()
+					.write(&self.ram[self.pointer..self.pointer + 1])
+					.expect("Oopsie");
 			}
 
 			',' => {
-				io::stdin().read(&mut self.ram[self.pointer..self.pointer + 1]).unwrap();
+				io::stdin()
+					.read(&mut self.ram[self.pointer..self.pointer + 1])
+					.unwrap();
 			}
 
 			'[' => {
@@ -60,9 +64,9 @@ impl Interpreter {
 				if self.ram[self.pointer] == 0 {
 					while {
 						self.pc += 1;
-						if self.rom[self.pc] == '[' {
+						if self.rom[self.pc] == '[' as u8 {
 							self.loop_count += 1;
-						} else if self.rom[self.pc] == ']' {
+						} else if self.rom[self.pc] == ']' as u8 {
 							self.loop_count -= 1;
 						}
 						self.loop_count != 0
@@ -73,9 +77,9 @@ impl Interpreter {
 			']' => {
 				self.loop_count = 0;
 				while {
-					if self.rom[self.pc] == '[' {
+					if self.rom[self.pc] == '[' as u8 {
 						self.loop_count -= 1;
-					} else if self.rom[self.pc] == ']' {
+					} else if self.rom[self.pc] == ']' as u8 {
 						self.loop_count += 1;
 					}
 					self.pc -= 1;
